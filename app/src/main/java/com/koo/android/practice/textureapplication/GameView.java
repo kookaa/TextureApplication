@@ -67,6 +67,13 @@ public class GameView extends TextureView implements TextureView.SurfaceTextureL
                 Rect src = new Rect(0, 0, w, h);
                 // 描画先の矩形イメージ
 
+                //ジャンプ処理
+                boolean jflag = false;
+                int y_def = 360;
+                int speed = 20;//ジャンプのスピード20くらいがいいかも
+                float jf = 0.8f;//高さ調整など
+                int y=y_def,y_prev=0,y_temp=0,y_move=0;
+
                 while (mlsRunnable) {
                     dw = getWidth();
                     dh = getHeight();
@@ -87,7 +94,25 @@ public class GameView extends TextureView implements TextureView.SurfaceTextureL
                     }
                     if (i == 100) i = 0;
 
-                    Rect dst = new Rect(0, getHeight()-(h/cw) - groundH, w/cw, getHeight()-(h/cw) + h/cw - groundH);
+                    //ジャンプ処理
+                    if(jflag==true){
+                        y_temp = y;
+                        y +=(y-y_prev)+1;
+                        y_prev = y_temp;
+                        if(y==y_def)
+                            jflag=false;
+
+                    }
+                    y_move=y_def-y;
+                    int jp = (int) (y_move*jf);
+
+                    if(jflag==false){
+                        jflag=true;
+                        y_prev=y;
+                        y=y-speed;
+                    }
+
+                    Rect dst = new Rect(0, getHeight()-(h/cw) - groundH -jp, w/cw, getHeight()-(h/cw) + h/cw - groundH-jp);
 
                     canvas.drawRect(0,dh-groundH,dw,dh,paint);//地面
                     canvas.drawBitmap(img,src,dst,null);//character
