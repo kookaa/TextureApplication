@@ -8,6 +8,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.View;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * Created by koo on 2015/08/17.
  */
@@ -18,13 +21,21 @@ public class Character implements DrawableItem {
             R.drawable.st_std_l_2
     };
 
+    public enum EVENTS{
+        NOTHING,
+        MOVERIGHT,
+        MOVELEFT
+    }
+
+    private EVENTS event = EVENTS.NOTHING;
+
     public int srcCWidth, srcCHeight;//元画像サイズ
     public int destCWidth, destCHeight;//出力画像サイズ
 
     public int displayWidth, displayHeight;
     private Bitmap img, img1, img2;
 
-    private int division = 8;
+    private int division = 10;
     private int displayCharacterWidth;
     private int retio;
     //ジャンプ処理
@@ -34,8 +45,11 @@ public class Character implements DrawableItem {
     float jf = 0.8f;//高さ調整など
     int y = y_def, y_prev = 0, y_temp = 0, y_move = 0;
 
-    public boolean moveRightFlg = false;
     private int baseLeft = 0;
+    private int startX = -1;
+    private int endX = 0;
+    private int moveRangeX = 0;
+    private int actionRange = 0;
 
     public Character(View view, int width, int height) {
         Resources r = view.getResources();
@@ -56,35 +70,82 @@ public class Character implements DrawableItem {
         retio = srcCWidth / destCWidth;
         destCHeight = srcCHeight /retio;
 
+        moveRangeX = destCWidth;//移動距離
     }
 
     @Override
     public void draw(Canvas canvas, Paint paint) {
 
-        if(moveRightFlg) {
-
-        }
+        doAction();
 
         Rect src = new Rect(0, 0, srcCWidth, srcCHeight);
         Rect dst = new Rect(getLeft(), getTop(), getRight(), getBottom());
-
         canvas.drawBitmap(getImg(), src, dst, null);//character
+        canvas.drawRect(dst,paint);
+        this.dst = dst;
     }
 
-    private int getTop() {
+    private void doAction() {
+        if(event == EVENTS.NOTHING) {
+            event = pollEvent();
+        }
+        switch (event) {
+            case MOVERIGHT:
+                if(startX < 0) {
+                    startX = getLeft();
+                    endX = startX + moveRangeX;
+                }
+
+                if (getLeft() >= endX) {
+                    event = EVENTS.NOTHING;
+                    startX = -1;
+                }
+                baseLeft++;
+                break;
+            case MOVELEFT:
+                if(startX < 0) {
+                    startX = getLeft();
+                    endX = startX - moveRangeX;
+                }
+
+                if (getLeft() <= endX) {
+                    event = EVENTS.NOTHING;
+                    startX = -1;
+                }
+                baseLeft--;
+                break;
+        }
+    }
+
+    private Queue<EVENTS> queue = new LinkedList<EVENTS>();
+
+    public boolean addEvent(EVENTS e) {
+        return (queue.offer(e));
+    }
+
+    private EVENTS pollEvent(){
+        EVENTS e = queue.poll();
+        return (e == null) ? EVENTS.NOTHING : e;
+    }
+
+    public void skipEvent() {
+        event = EVENTS.NOTHING;
+    }
+
+    public int getTop() {
         return displayHeight - destCHeight;
     }
 
-    private int getLeft() {
-        return 0;
+    public int getLeft() {
+        return baseLeft;
     }
 
-    private int getRight() {
+    public int getRight() {
         return getLeft() + destCWidth;
 
     }
 
-    private int getBottom() {
+    public int getBottom() {
         return displayHeight;
     }
 
@@ -100,4 +161,8 @@ public class Character implements DrawableItem {
         return img;
     }
 
+    private Rect dst;
+    public boolean intersects(Rect r){
+        return this.dst.intersect(r);
+    }
 }

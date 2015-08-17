@@ -3,6 +3,7 @@ package com.koo.android.practice.textureapplication;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 /**
  * Created by kenz on 15/04/19.
@@ -14,6 +15,8 @@ public class Block implements DrawableItem {
     private final float mBottom;
     private final float mRight;
     private int mHard;
+
+    public Rect rect;
 
     public Block(float top, float left, float bottom, float right) {
         mTop = top;
@@ -63,7 +66,10 @@ public class Block implements DrawableItem {
         // 塗りつぶし部分を描画
         paint.setColor(Color.BLUE);
         paint.setStyle(Paint.Style.FILL);
-        canvas.drawRect(mLeft, mTop, mRight, mBottom, paint); // 枠線部分を描画
+        //canvas.drawRect(mLeft, mTop, mRight, mBottom, paint); // 枠線部分を描画
+        Rect rect = new Rect((int)mLeft, (int)mTop, (int)mRight, (int)mBottom);
+        canvas.drawRect(rect,paint);
+        this.rect = rect;
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(4f);
