@@ -101,7 +101,7 @@ public class Character implements DrawableItem {
     private boolean directionY = true;//true 下向き false 上向き
 
     private void doAction() {
-        if (event == EVENTS.NOTHING) {
+        if (event == EVENTS.NOTHING && !directionY) {
             event = pollEvent();
         }
         switch (event) {
@@ -111,6 +111,8 @@ public class Character implements DrawableItem {
                     startX = -1;
                     baseLeft -= rebound;
                     break;
+                } else {
+                    directionY = true;
                 }
                 if (startX < 0) {
                     startX = getLeft();
@@ -129,6 +131,8 @@ public class Character implements DrawableItem {
                     startX = -1;
                     baseLeft++;
                     break;
+                } else {
+                    directionY = true;
                 }
                 if (startX < 0) {
                     startX = getLeft();
@@ -136,8 +140,8 @@ public class Character implements DrawableItem {
                 }
 
                 if (getLeft() <= endX) {
-                    event = EVENTS.NOTHING;
                     startX = -1;
+                    event = EVENTS.NOTHING;
                 }
                 baseLeft--;
                 break;
@@ -167,7 +171,7 @@ public class Character implements DrawableItem {
                 event = EVENTS.NOTHING;
                 startX = -1;
                 if (!isIntersect) {
-                    if(directionY){
+                    if (directionY) {
                         baseBottom--;
                     }
                 } else {
