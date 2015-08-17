@@ -34,6 +34,7 @@ public class MainActivity extends Activity {
 
         Button rightBtn = (Button) findViewById(R.id.move_right);
         Button leftBtn = (Button) findViewById(R.id.move_left);
+        Button jRightBtn = (Button) findViewById(R.id.jump_right);
 
         rightBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,6 +47,13 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 mView.onBtnLeft(v);
+            }
+        });
+
+        jRightBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mView.onBtnJRight(v);
             }
         });
     }

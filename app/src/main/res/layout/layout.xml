@@ -10,7 +10,17 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:textSize="10dp"
         android:text="moveLeft"/>
+
+    <Button
+        android:id="@+id/jump_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="10dp"
+        android:text="jumpRight"/>
 
     <Button
         android:id="@+id/move_right"
@@ -18,5 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:textSize="10dp"
         android:text="moveRight"/>
 </RelativeLayout>

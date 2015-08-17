@@ -56,15 +56,12 @@ public class GameView extends TextureView implements TextureView.SurfaceTextureL
 
                         try {
                             if (i % 50 == 0) character.changeImg();
-                        } catch (Exception e) {
-                            Log.e("ss", e.toString());
+                            //ブロックとキャラの衝突処理
+                            character.draw(canvas, paint);
+                        } catch (NullPointerException e) {
+                            Log.e(this.toString(), e.toString());
                         }
-
-                        //ブロックとキャラの衝突処理
-                        character.draw(canvas, paint);
-                        if (intersectsBlocks()) {
-                            character.skipEvent();
-                        }
+                        intersectsBlocks();//衝突処理はCharacterクラスで
                         unlockCanvasAndPost(canvas);
                     }
                     long sleepTime = 16 - System.currentTimeMillis() + startTime;
@@ -129,7 +126,7 @@ public class GameView extends TextureView implements TextureView.SurfaceTextureL
                 {false, false, false, false, false, false, false, false, false, false},
                 {false, false, false, false, false, false, false, false, false, false},
                 {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, true, false, false, false, false}
+                {false, false, true, false, false, false, false, false, false, false}
         };
 
         for (int i = 0; i < blockMap.length; i++) {
@@ -185,6 +182,10 @@ public class GameView extends TextureView implements TextureView.SurfaceTextureL
 
     public boolean onBtnLeft(View v) {
         character.addEvent(Character.EVENTS.MOVELEFT);
+        return true;
+    }
+    public boolean onBtnJRight(View v) {
+        character.addEvent(Character.EVENTS.JUMPRIGHT);
         return true;
     }
 }

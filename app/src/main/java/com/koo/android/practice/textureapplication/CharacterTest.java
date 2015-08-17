@@ -48,7 +48,22 @@ public class CharacterTest {
     }
 
     public void draw(Canvas canvas, Paint paint) {
+        int jp = getJp();
 
+
+        Rect src = new Rect(0, 0, sizePoint.x, sizePoint.y);
+        Rect dst = new Rect(
+                0,
+                displayPoint.y-(sizePoint.y/displayCharacterWidth) -jp,
+                sizePoint.x/displayCharacterWidth,
+                displayPoint.y-(sizePoint.y/displayCharacterWidth) + sizePoint.y/displayCharacterWidth -jp
+        );
+        canvas.drawRect(0,displayPoint.y,displayPoint.x,displayPoint.y,paint);//地面
+        canvas.drawBitmap(getImg(),src,dst,null);//character
+
+    }
+
+    private int getJp() {
         //ジャンプ処理
         if(jflag==true){
             y_temp = y;
@@ -66,17 +81,7 @@ public class CharacterTest {
             y_prev=y;
             y=y-speed;
         }
-
-        Rect src = new Rect(0, 0, sizePoint.x, sizePoint.y);
-        Rect dst = new Rect(
-                0,
-                displayPoint.y-(sizePoint.y/displayCharacterWidth) -jp,
-                sizePoint.x/displayCharacterWidth,
-                displayPoint.y-(sizePoint.y/displayCharacterWidth) + sizePoint.y/displayCharacterWidth -jp
-        );
-        canvas.drawRect(0,displayPoint.y,displayPoint.x,displayPoint.y,paint);//地面
-        canvas.drawBitmap(getImg(),src,dst,null);//character
-
+        return jp;
     }
 
     public void changeImg(){
