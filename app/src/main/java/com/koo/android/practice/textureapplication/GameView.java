@@ -123,9 +123,10 @@ public class GameView extends TextureView implements TextureView.SurfaceTextureL
                 {false, false, false, false, false, false, false, false, false, false},
                 {false, false, false, false, false, false, false, false, false, false},
                 {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, true, false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, false},
                 //{false, false, false, false, true, false, false, false, false, false}
-                {true, true, true, true, true, true, true, true, true, true}
+                //{true, true, true, true, true, true, true, true, true, true}
+                {true, true, true, true, false, false, true, true, true, true}
         };
 
         for (int i = 0; i < blockMap.length; i++) {

@@ -172,7 +172,8 @@ public class Character implements DrawableItem {
                 startX = -1;
                 if (!isIntersect) {
                     if (directionY) {
-                        baseBottom--;
+//                        baseBottom--;
+                        baseBottom-=3;
                     }
                 } else {
                     baseBottom++;
