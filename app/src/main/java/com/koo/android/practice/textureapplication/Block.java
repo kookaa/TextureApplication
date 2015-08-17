@@ -70,9 +70,9 @@ public class Block implements DrawableItem {
         Rect rect = new Rect((int)mLeft, (int)mTop, (int)mRight, (int)mBottom);
         canvas.drawRect(rect,paint);
         this.rect = rect;
-        paint.setColor(Color.BLACK);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(4f);
+        //paint.setColor(Color.BLACK);
+        //paint.setStyle(Paint.Style.STROKE);
+        //paint.setStrokeWidth(4f);
         canvas.drawRect(mLeft, mTop, mRight, mBottom, paint);
     }
 }

@@ -4,7 +4,10 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.view.View;
 
@@ -21,7 +24,7 @@ public class Character implements DrawableItem {
             R.drawable.st_std_l_2
     };
 
-    public enum EVENTS{
+    public enum EVENTS {
         NOTHING,
         MOVERIGHT,
         MOVELEFT,
@@ -48,7 +51,7 @@ public class Character implements DrawableItem {
     int y = y_def, y_prev = 0, y_temp = 0, y_move = 0;
 
     private int baseLeft = 0;
-    private int baseBottom = 0;
+    private int baseBottom = 100;
     private int baseBottom_temp = 0;
 
     private int startX = -1;
@@ -73,7 +76,7 @@ public class Character implements DrawableItem {
         //出力画像サイズ計算
         destCWidth = width / division;
         retio = srcCWidth / destCWidth;
-        destCHeight = srcCHeight /retio;
+        destCHeight = srcCHeight / retio;
 
         moveRangeX = destCWidth;//移動距離
     }
@@ -82,28 +85,34 @@ public class Character implements DrawableItem {
     public void draw(Canvas canvas, Paint paint) {
 
         doAction();
-
         Rect src = new Rect(0, 0, srcCWidth, srcCHeight);
         Rect dst = new Rect(getLeft(), getTop(), getRight(), getBottom());
+
+        paint = new Paint();
+        paint.setColor(Color.TRANSPARENT);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        canvas.drawRect(dst, paint);
+
         canvas.drawBitmap(getImg(), src, dst, null);//character
-        canvas.drawRect(dst,paint);
         this.dst = dst;
     }
 
     private int rebound = 5;
+    private boolean directionY = true;//true 下向き false 上向き
+
     private void doAction() {
-        if(event == EVENTS.NOTHING) {
+        if (event == EVENTS.NOTHING) {
             event = pollEvent();
         }
         switch (event) {
             case MOVERIGHT:
-                if(isIntersect){
+                if (isIntersect) {
                     event = EVENTS.NOTHING;
                     startX = -1;
-                    baseLeft-=rebound;
+                    baseLeft -= rebound;
                     break;
                 }
-                if(startX < 0) {
+                if (startX < 0) {
                     startX = getLeft();
                     endX = startX + moveRangeX;
                 }
@@ -115,13 +124,13 @@ public class Character implements DrawableItem {
                 baseLeft++;
                 break;
             case MOVELEFT:
-                if(isIntersect){
+                if (isIntersect) {
                     event = EVENTS.NOTHING;
                     startX = -1;
                     baseLeft++;
                     break;
                 }
-                if(startX < 0) {
+                if (startX < 0) {
                     startX = getLeft();
                     endX = startX - moveRangeX;
                 }
@@ -133,15 +142,15 @@ public class Character implements DrawableItem {
                 baseLeft--;
                 break;
             case JUMPRIGHT:
-                if(isIntersect){
+                if (isIntersect && startX >= 0) {
                     event = EVENTS.NOTHING;
                     startX = -1;
                     baseLeft--;
-                    baseBottom+=rebound;
+                    baseBottom += rebound;
                     initJumpParam();
                     break;
                 }
-                if(startX < 0) {
+                if (startX < 0) {
                     startX = getLeft();
                     endX = startX + moveRangeX;
                     baseBottom_temp = baseBottom;
@@ -157,6 +166,14 @@ public class Character implements DrawableItem {
             default:
                 event = EVENTS.NOTHING;
                 startX = -1;
+                if (!isIntersect) {
+                    if(directionY){
+                        baseBottom--;
+                    }
+                } else {
+                    baseBottom++;
+                    directionY = false;
+                }
                 break;
         }
     }
@@ -167,7 +184,7 @@ public class Character implements DrawableItem {
         return (queue.offer(e));
     }
 
-    private EVENTS pollEvent(){
+    private EVENTS pollEvent() {
         EVENTS e = queue.poll();
         return (e == null) ? EVENTS.NOTHING : e;
     }
@@ -177,7 +194,7 @@ public class Character implements DrawableItem {
     }
 
     public int getTop() {
-        return displayHeight - destCHeight -baseBottom;
+        return displayHeight - destCHeight - baseBottom;
     }
 
     public int getLeft() {
@@ -190,7 +207,7 @@ public class Character implements DrawableItem {
     }
 
     public int getBottom() {
-        return displayHeight-baseBottom;
+        return displayHeight - baseBottom;
     }
 
     public void changeImg() {
@@ -207,25 +224,26 @@ public class Character implements DrawableItem {
 
     private Rect dst;
     private boolean isIntersect = false;
-    public boolean intersects(Rect r){
+
+    public boolean intersects(Rect r) {
         isIntersect = this.dst.intersect(r);
         return isIntersect;
     }
 
     private int getJp() {
         //ジャンプ処理
-        if(jflag==true){
+        if (jflag == true) {
             y_temp = y;
-            y +=(y-y_prev)+1;
+            y += (y - y_prev) + 1;
             y_prev = y_temp;
         }
-        y_move=y_def-y;
-        int jp = (int) (y_move*jf);
+        y_move = y_def - y;
+        int jp = (int) (y_move * jf);
 
-        if(jflag==false){
-            jflag=true;
-            y_prev=y;
-            y=y-speed;
+        if (jflag == false) {
+            jflag = true;
+            y_prev = y;
+            y = y - speed;
         }
         return jp;
     }

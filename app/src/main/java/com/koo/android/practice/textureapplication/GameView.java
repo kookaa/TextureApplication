@@ -33,8 +33,6 @@ public class GameView extends TextureView implements TextureView.SurfaceTextureL
             @Override
             public void run() {
                 Paint paint = new Paint();
-                paint.setColor(Color.RED);
-                paint.setStyle(Paint.Style.FILL);
                 int i = 0;
                 while (true) {
                     // アプリ実行中繰り返し呼ばれる
@@ -125,8 +123,9 @@ public class GameView extends TextureView implements TextureView.SurfaceTextureL
                 {false, false, false, false, false, false, false, false, false, false},
                 {false, false, false, false, false, false, false, false, false, false},
                 {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false},
-                {false, false, true, false, false, false, false, false, false, false}
+                {false, false, false, false, true, false, false, false, false, false},
+                //{false, false, false, false, true, false, false, false, false, false}
+                {true, true, true, true, true, true, true, true, true, true}
         };
 
         for (int i = 0; i < blockMap.length; i++) {
